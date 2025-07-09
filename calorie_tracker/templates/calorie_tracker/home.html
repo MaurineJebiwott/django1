@@ -1,0 +1,27 @@
+{% extends 'calorie_tracker/base.html' %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Today's Calories: {{ total_calories }}</h1>
+
+<form method="POST" action="{% url 'add_food' %}" class="mb-4 space-y-2">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Food Name" required class="border p-2 rounded w-full">
+    <input type="number" name="calories" placeholder="Calories" required class="border p-2 rounded w-full">
+    <button class="bg-blue-500 text-white px-4 py-2 rounded">Add Food</button>
+</form>
+
+<ul class="space-y-2">
+    {% for item in food_items %}
+    <li class="flex justify-between bg-white p-3 rounded shadow">
+        {{ item.name }} - {{ item.calories }} kcal
+        <a href="{% url 'delete_food' item.id %}" class="text-red-500">Delete</a>
+    </li>
+    {% empty %}
+    <li>No food items yet today.</li>
+    {% endfor %}
+</ul>
+
+<form method="POST" action="{% url 'reset_day' %}" class="mt-6">
+    {% csrf_token %}
+    <button class="bg-red-500 text-white px-4 py-2 rounded">Reset Day</button>
+</form>
+{% endblock %}
